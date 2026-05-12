@@ -1,29 +1,27 @@
 pipeline {
-    agent any
-
-    tools {
-        maven 'maven 3.6.3'
+  agent any
+  stages {
+    stage('Build') {
+      steps {
+        sh 'mvn compile'
+      }
     }
 
-    stages {
-
-        stage('Build') {
-            steps {
-                sh 'mvn compile'
-            }
-        }
-
-        stage('Test') {
-            steps {
-                sh 'mvn test'
-            }
-        }
-
-        stage('Package') {
-            steps {
-                sh 'mvn package -DskipTests'
-            }
-        }
+    stage('Test') {
+      steps {
+        sh 'mvn test'
+      }
     }
+
+    stage('Package') {
+      steps {
+        sh 'mvn package -DskipTests'
+        archiveArtifacts '**/target/*.jar'
+      }
+    }
+
+  }
+  tools {
+    maven 'maven 3.6.3'
+  }
 }
-  
